@@ -1,8 +1,13 @@
 package config
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"time"
+
+	"github.com/ethanflaharty/blog-aggregator/internal/database"
+	"github.com/google/uuid"
 )
 
 type Config struct {
@@ -21,6 +26,7 @@ func (c *Config) SetUser(userName string) error {
 
 type State struct {
 	CFG *Config
+	DB  *database.Queries
 }
 
 type Command struct {
@@ -32,11 +38,37 @@ func HandlerLogin(s *State, cmd Command) error {
 	if len(cmd.Username) < 1 {
 		return errors.New("login expects a username")
 	}
-	err := s.CFG.SetUser(cmd.Username[0])
+	_, err := s.DB.GetUser(context.Background(), cmd.Username[0])
+	if err != nil {
+		return fmt.Errorf("user doesn't exist")
+	}
+	err = s.CFG.SetUser(cmd.Username[0])
 	if err != nil {
 		return err
 	}
 	fmt.Println("User has been set")
+	return nil
+}
+
+func HandlerRegister(s *State, cmd Command) error {
+	if len(cmd.Username) < 1 {
+		return errors.New("register expects a username")
+	}
+	_, err := s.DB.GetUser(context.Background(), cmd.Username[0])
+	if err == nil {
+		return fmt.Errorf("user already exists")
+	}
+	userParms := database.CreateUserParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Name: cmd.Username[0]}
+	newUser, err := s.DB.CreateUser(context.Background(), userParms)
+	if err != nil {
+		return err
+	}
+	err = s.CFG.SetUser(newUser.Name)
+	if err != nil {
+		return err
+	}
+	fmt.Println("new user was created")
+	fmt.Println(newUser)
 	return nil
 }
 
