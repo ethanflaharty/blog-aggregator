@@ -72,6 +72,15 @@ func HandlerRegister(s *State, cmd Command) error {
 	return nil
 }
 
+func HandlerReset(s *State, cmd Command) error {
+	err := s.DB.Reset(context.Background())
+	if err != nil {
+		return fmt.Errorf("reset unsuccessful")
+	}
+	fmt.Println("reset successful")
+	return nil
+}
+
 type Commands struct {
 	Cmds map[string]func(*State, Command) error
 }

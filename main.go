@@ -30,6 +30,7 @@ func main() {
 	savedCmds.Cmds = make(map[string]func(*config.State, config.Command) error)
 	savedCmds.Register("login", config.HandlerLogin)
 	savedCmds.Register("register", config.HandlerRegister)
+	savedCmds.Register("reset", config.HandlerReset)
 	if len(os.Args) < 2 {
 		fmt.Println("not enough arguments provided")
 		os.Exit(1)
