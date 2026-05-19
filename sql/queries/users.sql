@@ -14,3 +14,6 @@ where name = $1;
 
 -- name: Reset :exec
 delete from users;
+
+-- name: GetUsers :many
+select name from users;

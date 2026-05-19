@@ -81,6 +81,21 @@ func HandlerReset(s *State, cmd Command) error {
 	return nil
 }
 
+func HandelerUsers(s *State, cmd Command) error {
+	users, err := s.DB.GetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("no users saved")
+	}
+	for _, name := range users {
+		if name != s.CFG.CurrentUserName {
+			fmt.Printf("* %v\n", name)
+		} else {
+			fmt.Printf("* %v (current)\n", name)
+		}
+	}
+	return nil
+}
+
 type Commands struct {
 	Cmds map[string]func(*State, Command) error
 }
