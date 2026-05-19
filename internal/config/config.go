@@ -81,7 +81,7 @@ func HandlerReset(s *State, cmd Command) error {
 	return nil
 }
 
-func HandelerUsers(s *State, cmd Command) error {
+func HandlerUsers(s *State, cmd Command) error {
 	users, err := s.DB.GetUsers(context.Background())
 	if err != nil {
 		return fmt.Errorf("no users saved")
@@ -93,6 +93,15 @@ func HandelerUsers(s *State, cmd Command) error {
 			fmt.Printf("* %v (current)\n", name)
 		}
 	}
+	return nil
+}
+
+func HandlerAgg(s *State, cmd Command) error {
+	feed, err := FetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%+v\n", feed)
 	return nil
 }
 
