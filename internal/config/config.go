@@ -114,6 +114,7 @@ func HandlerAddFeed(s *State, cmd Command) error {
 		return err
 	}
 	params := database.CreateFeedParams{
+		ID:     uuid.New(),
 		Name:   cmd.Username[0],
 		Url:    cmd.Username[1],
 		UserID: user.ID,
@@ -123,6 +124,19 @@ func HandlerAddFeed(s *State, cmd Command) error {
 		return err
 	}
 	fmt.Printf("%+v\n", feed)
+	return nil
+}
+
+func HandlerFeeds(s *State, cmd Command) error {
+	feeds, err := s.DB.GetFeeds(context.Background())
+	if err != nil {
+		return err
+	}
+	for _, feed := range feeds {
+		fmt.Println(feed.Name)
+		fmt.Println(feed.Url)
+		fmt.Println(feed.Name_2)
+	}
 	return nil
 }
 
