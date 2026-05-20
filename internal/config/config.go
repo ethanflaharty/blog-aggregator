@@ -105,6 +105,27 @@ func HandlerAgg(s *State, cmd Command) error {
 	return nil
 }
 
+func HandlerAddFeed(s *State, cmd Command) error {
+	if len(cmd.Username) < 2 {
+		return fmt.Errorf("not enough args provided")
+	}
+	user, err := s.DB.GetUser(context.Background(), s.CFG.CurrentUserName)
+	if err != nil {
+		return err
+	}
+	params := database.CreateFeedParams{
+		Name:   cmd.Username[0],
+		Url:    cmd.Username[1],
+		UserID: user.ID,
+	}
+	feed, err := s.DB.CreateFeed(context.Background(), params)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%+v\n", feed)
+	return nil
+}
+
 type Commands struct {
 	Cmds map[string]func(*State, Command) error
 }
