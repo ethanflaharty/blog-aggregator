@@ -14,3 +14,6 @@ returning *;
 select feeds.*, users.name
 from feeds
 inner join users on users.id = feeds.user_id;
+
+-- name: GetFeedByURL :one
+select * from feeds where url = $1;

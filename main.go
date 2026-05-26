@@ -35,6 +35,8 @@ func main() {
 	savedCmds.Register("agg", config.HandlerAgg)
 	savedCmds.Register("addfeed", config.HandlerAddFeed)
 	savedCmds.Register("feeds", config.HandlerFeeds)
+	savedCmds.Register("follow", config.HanderFollow)
+	savedCmds.Register("following", config.HandlerFollowing)
 	if len(os.Args) < 2 {
 		fmt.Println("not enough arguments provided")
 		os.Exit(1)
