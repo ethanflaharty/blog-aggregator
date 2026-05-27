@@ -169,3 +169,22 @@ func HandlerFollowing(s *State, cmd Command, user database.User) error {
 	}
 	return nil
 }
+
+func HandlerUnfollow(s *State, cmd Command, user database.User) error {
+	if len(cmd.Username) < 1 {
+		return fmt.Errorf("requires feed url")
+	}
+	feed, err := s.DB.GetFeedByURL(context.Background(), cmd.Username[0])
+	if err != nil {
+		return err
+	}
+	params := database.UnfollowFeedParams{
+		UserID: user.ID,
+		FeedID: feed.ID,
+	}
+	err = s.DB.UnfollowFeed(context.Background(), params)
+	if err != nil {
+		return err
+	}
+	return nil
+}

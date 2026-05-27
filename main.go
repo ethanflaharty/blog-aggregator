@@ -37,6 +37,7 @@ func main() {
 	savedCmds.Register("feeds", config.HandlerFeeds)
 	savedCmds.Register("follow", config.MiddlewareLoggedIn(config.HanderFollow))
 	savedCmds.Register("following", config.MiddlewareLoggedIn(config.HandlerFollowing))
+	savedCmds.Register("unfollow", config.MiddlewareLoggedIn(config.HandlerUnfollow))
 	if len(os.Args) < 2 {
 		fmt.Println("not enough arguments provided")
 		os.Exit(1)
