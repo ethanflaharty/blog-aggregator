@@ -83,12 +83,22 @@ func HandlerUsers(s *State, cmd Command) error {
 }
 
 func HandlerAgg(s *State, cmd Command) error {
-	feed, err := FetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
+	if len(cmd.Username) < 1 {
+		return fmt.Errorf("requires duration")
+	}
+	durationString := cmd.Username[0]
+	durationValue, err := time.ParseDuration(durationString)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%+v\n", feed)
-	return nil
+	fmt.Printf("Collecting feeds every %v\n", durationValue)
+	ticker := time.NewTicker(durationValue)
+	for ; ; <-ticker.C {
+		err = scrapeFeeds(s)
+		if err != nil {
+			return err
+		}
+	}
 }
 
 func HandlerAddFeed(s *State, cmd Command, user database.User) error {
